@@ -11,8 +11,12 @@ function App() {
     const [screen,setScreen] = useState({h: window.innerHeight, w: window.innerWidth})
   const length = useRef(-2)
   const collison = useRef(false)
+  const [play,setPlay] = useState(true)
     useEffect(() => {
         const keypress = (event)=>{
+            if(!play){
+            return
+        }
         const key = event.key
           switch(key) {
                 case "w":
@@ -37,7 +41,7 @@ function App() {
                     break;
             }
     }
- window.addEventListener("keydown", keypress);
+    window.addEventListener("keydown", keypress);
     return ()=>{window.removeEventListener("keydown", keypress);}
     }, []); 
 
@@ -46,13 +50,19 @@ function App() {
 
       useEffect(() => {
      const update = ()=>{
-        
+        if(!play){
+            return
+        }
+           
             setSnake((prevstate)=>{
             let x = prevstate[0].x
             let y = prevstate[0].y
-            let bounds = snake[0].x<16 && snake[0].x>=0 && snake[0].y<16 && snake[0].y>=0
-
-
+            
+                 let bounds = (prevstate[0].x<=15 && prevstate[0].x>=0 && prevstate[0].y<=15 && prevstate[0].y>=0)
+           
+           
+           
+ 
             if(bounds && !collison.current){
                 
                 if(prev.current==1){
@@ -68,9 +78,26 @@ function App() {
                 y-=1
             }      
             }
+            else{
+                if(play!==false){
+                    setPlay(false)
+                }
+                
+            }
+
+            if(length.current>1){
+                for(let i=1;i<prevstate.length;i++){ 
+                        if (x == prevstate[i].x && y == prevstate[i].y) {
+                            setPlay(false)
+                            break
+                        }
+                }
+       
+            }
+            
         
             if(length.current>0){
-                return [{ x, y },...prevstate.slice(0, -1) ]
+                return [{ x, y },...prevstate.slice(0, prevstate.length - 1) ]
             }
             else{
                 return [{x,y}]
@@ -94,35 +121,36 @@ function App() {
         
     }
             
-    }, []);
+    }, [play]);
     
 
     useEffect(() => {
 
     const extend = ()=>{
-         const eat = snake.some((s)=>s.x===fruit.x && s.y===fruit.y)
+       if(!play){
+            return
+        }
+     
+        //console.log(collison.current)
+     
+        const eat = snake.some((s)=>s.x===fruit.x && s.y===fruit.y)
           if(eat){
             generateFruit()
             setPoints((x)=>x+1)
-            setSnake((s)=>[...s,{x:fruit.x,y:fruit.y}])
+            setSnake((s)=>[{x:fruit.x,y:fruit.y},...s])
           
             length.current+=1
         
         
         }
-        if(length>1){
-            collison.current=false
-            for(let i=1;i<snake.length;i++){
-                        if(snake[0].x===snake[i].x && snake[0].y===snake[i].y){
-                            collison.current = true
-                            break
-                        }
-            }
-        }
+        
+          
+           
+        
        
-        console.log(collison.current)
-
+      //  console.log(collison.current)
     }
+    
 
 
     extend()
@@ -131,21 +159,25 @@ function App() {
     }, [snake]);
 
      const generateFruit = ()=>{
-       let fx = parseInt((Math.round(Math.random()*16)))
-       let fy = parseInt((Math.round(Math.random()*16)))
-       while(fx<0 || fx>16 || fy<0 || fy>16){
+       let fx = parseInt((Math.round(Math.random()*15)))
+       let fy = parseInt((Math.round(Math.random()*15)))
+       while(fx<0 || fx>15 || fy<0 || fy>15){
         generateFruit()
        }
         setFruit({x:fx,y:fy})
+        console.log(`${fx},${fy}`)
     }
 
     
 
 
    
-    return(
-        <div className="container">
-            <h1>{points}</h1>
+    const GamePage = ()=>{
+        return (
+ <div className="container">
+    <div>
+ <h1 style={{color:'white'}}>Score: {points}</h1>
+<div>
   {grid.map((r, row) => (
     <div className="col" key={row}>
       {r.map((c, col) => {
@@ -163,13 +195,49 @@ function App() {
           <div
             key={col}
             className="box"
-            style={{background: isSnake? "green": isFruit? "red": "white" }}
+            style={{background: isSnake? "green": isFruit? "red": "black" }}
           ></div>
         );
       })}
     </div>
-  ))}
+  ))}</div>
+    </div>
+           
 </div>
+        )
+    }
+
+    const PlayPage = ()=>{
+        return (
+        <div className="container2">
+            <div>
+                <h1 style={{color:'white',fontSize:50}}> GAME OVER</h1>
+           <h1 style={{color:'white'}}>Score: {points}</h1>
+           <button className='btn'
+  onClick={() => {
+   
+    setSnake([{ x: 0, y: 0 }]);
+    setFruit({ x: 0, y: 0 });
+    prev.current = 0;
+    collison.current = false;
+    length.current = -1;
+    setPoints(-1)
+    setPlay(true);
+  }}
+>Play</button>
+            </div>
+           
+        </div>
+        )
+    }
+    return(
+       
+            <>
+          {play === true ? <GamePage /> : <PlayPage/>}
+            
+            </>
+        
+    
     )
 }
 export default App
