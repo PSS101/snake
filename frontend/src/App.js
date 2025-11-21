@@ -13,29 +13,35 @@ function App() {
   const length = useRef(-1)
   const collison = useRef(false)
   const [play,setPlay] = useState(true)
+  const k = useRef(0)
     useEffect(() => {
         const keypress = (event)=>{
             if(!play){
             return
         }
         const key = event.key
+        
           switch(key) {
                 case "w":
+                    k.current = 1
                     if(prev.current !== 2) {
                         prev.current = 1;
                     }
                     break;
                 case "s":
+                    k.current = 2
                     if(prev.current !== 1) {
                         prev.current = 2;
                     }
                     break;
                 case "d":
+                    k.current = 3
                     if(prev.current !== 4) {
                         prev.current = 3;
                     }
                     break;
                 case "a":
+                    k.current = 4
                     if(prev.current !== 3) {
                         prev.current = 4;
                     }
@@ -177,7 +183,7 @@ function App() {
         return (
  <div className="container">
     <div>
- <h1 style={{color:'white',  fontFamily: '"Press Start 2P", system-ui'}}>Score: {points}</h1>
+ <h1 style={{color:'white',  fontFamily: '"Press Start 2P", system-ui'}}>Score: {points<0?0:points}</h1>
 <div>
   {grid.map((r, row) => (
     <div className="col" key={row}>
@@ -199,14 +205,25 @@ function App() {
           <div
             key={col}
             className="box"
-            style={{background: isSnake? "green": isFruit? "": "#202020ff",backgroundImage: isFruit? "url('https://minecraft.wiki/images/Apple_JE3_BE3.png?3853a')":"", backgroundSize: "cover", }}
+            style={{background: isSnake? "#00ff44ff": isFruit? "": "#202020ff",backgroundImage: isFruit? "url('https://minecraft.wiki/images/Apple_JE3_BE3.png?3853a')":"", backgroundSize: "cover", }}
           ></div>
         );
       })}
     </div>
   ))}</div>
+ 
+  <div style={{ display: 'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+  <h1 style={{color:k.current==1?'white':'',height:50,width:50,borderWidth:1,borderStyle: 'solid',textAlign:'center',borderRadius:5}}>W</h1> 
+  <div style={{display:'flex',flexDirection:'row'}}>
+    <h1 style={{color:k.current==4?'white':'',height:50,width:50,borderWidth:1,borderStyle: 'solid',textAlign:'center',margin:5,borderRadius:5}}>A</h1> 
+  <h1 style={{color:k.current==2?'white':'',height:50,width:50,borderWidth:1,borderStyle: 'solid',textAlign:'center',margin:5,borderRadius:5}}>S</h1> 
+  <h1 style={{color:k.current==3?'white':'',height:50,width:50,borderWidth:1,borderStyle: 'solid',textAlign:'center',margin:5,borderRadius:5}}>D</h1> 
+  </div>
+  </div>
+  
+  
     </div>
-           
+    
 </div>
         )
     }
@@ -216,7 +233,7 @@ function App() {
         <div className="container2">
             <div>
                 <h1 style={{color:'white',fontSize:50, fontFamily: '"Press Start 2P", system-ui'}}> GAME OVER</h1>
-           <h1 style={{color:'white', fontFamily: '"Press Start 2P", system-ui'}}>Score: {points}</h1>
+           <h1 style={{color:'white', fontFamily: '"Press Start 2P", system-ui'}}>Score: {points<0?0:points}</h1>
            <button className='btn'
   onClick={() => {
    
