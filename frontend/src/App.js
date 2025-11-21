@@ -1,15 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState,useEffect,useRef } from 'react';
+import "@fontsource/press-start-2p";
 function App() {
     const size = 16
     const grid = new Array(size).fill(new Array(size).fill(0));
       const [snake,setSnake] = useState([{x:0,y:0}])
   const [fruit,setFruit] = useState({x:0,y:0})
   const prev = useRef(0); 
-  const[points,setPoints] = useState(-2)
+  const[points,setPoints] = useState(-1)
     const [screen,setScreen] = useState({h: window.innerHeight, w: window.innerWidth})
-  const length = useRef(-2)
+  const length = useRef(-1)
   const collison = useRef(false)
   const [play,setPlay] = useState(true)
     useEffect(() => {
@@ -176,7 +177,7 @@ function App() {
         return (
  <div className="container">
     <div>
- <h1 style={{color:'white'}}>Score: {points}</h1>
+ <h1 style={{color:'white',  fontFamily: '"Press Start 2P", system-ui'}}>Score: {points}</h1>
 <div>
   {grid.map((r, row) => (
     <div className="col" key={row}>
@@ -189,13 +190,16 @@ function App() {
                 break
             }
 
+
+
+            
         }
         
         return (
           <div
             key={col}
             className="box"
-            style={{background: isSnake? "green": isFruit? "red": "black" }}
+            style={{background: isSnake? "green": isFruit? "": "#202020ff",backgroundImage: isFruit? "url('https://minecraft.wiki/images/Apple_JE3_BE3.png?3853a')":"", backgroundSize: "cover", }}
           ></div>
         );
       })}
@@ -211,8 +215,8 @@ function App() {
         return (
         <div className="container2">
             <div>
-                <h1 style={{color:'white',fontSize:50}}> GAME OVER</h1>
-           <h1 style={{color:'white'}}>Score: {points}</h1>
+                <h1 style={{color:'white',fontSize:50, fontFamily: '"Press Start 2P", system-ui'}}> GAME OVER</h1>
+           <h1 style={{color:'white', fontFamily: '"Press Start 2P", system-ui'}}>Score: {points}</h1>
            <button className='btn'
   onClick={() => {
    
