@@ -21,9 +21,9 @@ Updates the snake’s position.
 Checks for collisions.
 Handles user input.
 Growth happens by adding a new segment when food is eaten.
-4.  Technologies (likely)
+4.  Technologies
 Typically built using:
-Python / C / C++ / JavaScript (depends on repo)
+Python / C / C++ / JavaScript 
 Simple graphics or terminal-based rendering
 5.  Purpose of the Project
 Learn basic game development concepts
